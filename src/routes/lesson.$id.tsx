@@ -2,8 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, Delete } from "lucide-react";
 import { Slab } from "@/components/slab";
+import { VisualExplainer } from "@/components/visual-explainer";
 import { playCue, unlockAudio } from "@/lib/audio";
-import { explain } from "@/lib/explain";
+import { explain, buildVisualExplanation } from "@/lib/explain";
 import {
   LESSONS,
   ROUND,
@@ -314,14 +315,13 @@ function Drill({ lesson, onRetry }: { lesson: Lesson; onRetry: () => void }) {
       {run.phase === "intro" ? (
         <section className="mt-5">
           <p className="text-pretty text-muted">{lesson.about}</p>
-          <Slip lines={lesson.example} mark={lesson.mark} />
-          <ol className="mt-4 space-y-2 text-sm">
-            {exampleSteps.map((step) => (
-              <li key={step} className="border-l-2 border-sage pl-3">
-                {step}
-              </li>
-            ))}
-          </ol>
+          <VisualExplainer
+            explanation={buildVisualExplanation(lesson.example, lesson.kind)}
+            variant="intro"
+          />
+          <div className="mt-4">
+            <Slip lines={lesson.example} mark={lesson.mark} />
+          </div>
           <button
             type="button"
             className="mt-6 h-14 w-full rounded-2xl bg-sage font-semibold text-paper"
@@ -345,6 +345,17 @@ function Drill({ lesson, onRetry }: { lesson: Lesson; onRetry: () => void }) {
           <Slab danger={danger} mode={mode} left={run.left} streak={run.streak} />
           <p className="mt-3 text-sm text-muted">{lesson.remind}</p>
           <Slip lines={problem.lines} mark={lesson.mark} />
+
+          {/* Подсказка как упростить: на уроках 1-4 открыта сразу, на старших свернута */}
+          {run.phase === "play" && problem.visual ? (
+            <VisualExplainer
+              key={`hint-${run.index}`}
+              explanation={problem.visual}
+              variant="hint"
+              initialOpen={lessonNo(lesson.id) <= 4}
+            />
+          ) : null}
+
           <label className="mt-3 block text-xs uppercase tracking-wide text-muted">
             Пометка
             <input
@@ -362,13 +373,21 @@ function Drill({ lesson, onRetry }: { lesson: Lesson; onRetry: () => void }) {
           </label>
           <p className="mt-4 text-center font-display text-5xl tabular-nums">{run.input || "·"}</p>
           {run.phase === "reveal" ? (
-            <div className="mt-3 rounded-2xl bg-clay-soft px-3 py-3 text-sm">
-              <p className="font-semibold">{run.fell ? "Плита закрыла ящик. " : ""}Нужно {fmt(problem.answer)}</p>
-              <ul className="mt-2 space-y-1">
-                {problem.steps.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ul>
+            <div className="mt-3">
+              <div className="rounded-2xl bg-clay-soft px-3 py-2 text-sm font-semibold text-clay">
+                {run.fell ? "Плита закрыла ящик. " : ""}Нужно {fmt(problem.answer)}
+              </div>
+              {problem.visual ? (
+                <VisualExplainer explanation={problem.visual} variant="reveal" />
+              ) : (
+                <div className="mt-2 rounded-2xl bg-clay-soft px-3 py-3 text-sm">
+                  <ul className="space-y-1">
+                    {problem.steps.map((step) => (
+                      <li key={step}>{step}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ) : null}
           <div className="mt-4 grid grid-cols-3 gap-2">

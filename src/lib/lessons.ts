@@ -1,4 +1,11 @@
-import { explain, sumLines, type Kind, type Line } from "@/lib/explain";
+import {
+  explain,
+  sumLines,
+  buildVisualExplanation,
+  type Kind,
+  type Line,
+  type VisualExplanation,
+} from "@/lib/explain";
 import { numberToRu } from "@/lib/ru";
 import type { Difficulty } from "@/lib/store";
 
@@ -7,6 +14,7 @@ export type Problem = {
   answer: number;
   steps: string[];
   speech: string;
+  visual: VisualExplanation;
 };
 
 export type Lesson = {
@@ -60,7 +68,13 @@ function speech(lines: Line[]) {
 
 function finish(kind: Kind, lines: Line[]): Problem {
   const answer = sumLines(lines);
-  return { lines, answer, steps: explain(kind, lines), speech: speech(lines) };
+  return {
+    lines,
+    answer,
+    steps: explain(kind, lines),
+    speech: speech(lines),
+    visual: buildVisualExplanation(lines, kind),
+  };
 }
 
 function splitSum(target: number): [number, number] {
@@ -167,20 +181,49 @@ export function secondsFor(d: Difficulty, lines: number, streak: number) {
   return base + per * lines + (streak >= 3 ? 4 : 0);
 }
 
+function makeTwo(d: Difficulty): Problem {
+  const mode = pick(["hundred", "ten", "split"]);
+  const lines: Line[] = [];
+
+  if (mode === "hundred") {
+    const near = pick([92, 89, 94, 91, 88, 95, 93]);
+    const other = ri(28, 75);
+    lines.push({ n: near, sign: 1 }, { n: other, sign: 1 });
+    if (d === "hard") {
+      lines.push({ n: ri(21, 55), sign: 1 });
+    }
+  } else if (mode === "ten") {
+    const tens = ri(2, 7) * 10;
+    const near = tens + pick([8, 9, 7]);
+    const other = ri(25, 65);
+    lines.push({ n: other, sign: 1 }, { n: near, sign: 1 });
+    if (d === "hard") {
+      lines.push({ n: ri(21, 55), sign: 1 });
+    }
+  } else {
+    lines.push({ n: two(25, 65), sign: 1 }, { n: two(21, 58), sign: 1 });
+    if (d === "hard") {
+      lines.push({ n: two(15, 45), sign: 1 });
+    }
+  }
+
+  return finish("run", lines);
+}
+
 export const LESSONS: Lesson[] = [
   {
     id: "two",
     chapter: "Одна сумма",
     title: "Два числа",
-    remind: "Сначала десятки, потом единицы. Не столбик справа.",
-    about: "Так начинают, когда в тетради всего две строки. Десятки складывают отдельно от единиц.",
+    remind: "Упрощай: округляй до сотни (92 → 100), до круглых десятков или складывай десятки слева направо.",
+    about: "Главный секрет устного счёта — не считать в лоб, а упрощать! Например, 92 + 65: прибавляем 100 + 65 = 165 и вычитаем лишние 8 → 157. Либо сначала десятки (90 + 60), затем единицы.",
     mark: false,
     kind: "run",
     example: [
-      { n: 47, sign: 1 },
-      { n: 38, sign: 1 },
+      { n: 92, sign: 1 },
+      { n: 65, sign: 1 },
     ],
-    make: (d) => makeRun(d, [2, 3, 4], false),
+    make: makeTwo,
   },
   {
     id: "running",
