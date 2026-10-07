@@ -27,8 +27,29 @@ export function VisualExplainer({
       ? explanation.alternative.title
       : explanation.title;
 
-  // 1. Компактная подсказка во время игры (Hint)
+function makeHintSteps(steps: VisualStep[]): VisualStep[] {
+  // Исключаем финальные шаги-результаты ("Итог", "Готово", "= 177")
+  const operational = steps.filter((s) => s.type !== "result");
+  if (operational.length === 0) return [];
+
+  // В последнем расчётном шаге скрываем ответ знаком "?"
+  return operational.map((step, idx) => {
+    if (idx === operational.length - 1) {
+      const formulaWithoutAnswer = step.formula.replace(/=\s*[-0-9\s]+$/, "= ?");
+      return {
+        ...step,
+        formula: formulaWithoutAnswer,
+        note: step.note ? `${step.note} — сосчитай в уме!` : "сосчитай в уме!",
+      };
+    }
+    return step;
+  });
+}
+
+  // 1. Компактная подсказка во время игры (Hint) — БЕЗ показа готового ответа!
   if (variant === "hint") {
+    const hintSteps = makeHintSteps(explanation.steps);
+
     if (!isOpen) {
       return (
         <button
@@ -73,32 +94,46 @@ export function VisualExplainer({
         <div className="p-3">
           <p className="text-xs text-muted">{explanation.tagline}</p>
           <div className="mt-2.5 space-y-1.5">
-            {explanation.steps.map((step, idx) => (
-              <div
-                key={`${step.label}-${idx}`}
-                className={`flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs ${
-                  step.type === "result"
-                    ? "bg-sage/10 font-bold text-sage"
-                    : step.type === "sub"
-                      ? "bg-clay-soft/40 text-clay"
-                      : "bg-paper border border-line/60"
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`inline-block size-1.5 rounded-full ${
-                      step.type === "result"
-                        ? "bg-sage"
-                        : step.type === "sub"
-                          ? "bg-clay"
-                          : "bg-gold"
-                    }`}
-                  />
-                  <span className="font-semibold">{step.label}</span>
+            {hintSteps.map((step, idx) => {
+              const isTargetAction = step.formula.includes("= ?");
+              return (
+                <div
+                  key={`${step.label}-${idx}`}
+                  className={`flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs transition-all ${
+                    isTargetAction
+                      ? "border border-gold/40 bg-gold/10 font-medium text-ink"
+                      : step.type === "sub"
+                        ? "bg-clay-soft/40 text-clay"
+                        : "border border-line/60 bg-paper"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`inline-block size-1.5 rounded-full ${
+                        isTargetAction
+                          ? "bg-gold animate-pulse"
+                          : step.type === "sub"
+                            ? "bg-clay"
+                            : "bg-sage"
+                      }`}
+                    />
+                    <span className="font-semibold">{step.label}</span>
+                  </div>
+                  <span className="font-mono text-sm font-bold tabular-nums">
+                    {isTargetAction ? (
+                      <span className="inline-flex items-center gap-1 text-ink">
+                        <span>{step.formula.replace("= ?", "")}</span>
+                        <span className="rounded-md bg-gold/25 px-1.5 py-0.5 text-xs font-black text-ink shadow-2xs">
+                          = ?
+                        </span>
+                      </span>
+                    ) : (
+                      step.formula
+                    )}
+                  </span>
                 </div>
-                <span className="font-mono text-sm font-bold tabular-nums">{step.formula}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
