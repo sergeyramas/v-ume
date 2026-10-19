@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>В уме — табло</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --page: #E3E5E2;
+  --alu: #F2F3F1;
+  --ink: #16181B;
+  --ink-2: #4A4F55;
+  --mute: #62676D;
+  --line: #C8CBC7;
+  --line-2: #DADDD9;
+  --white: #FFFFFF;
+  /* разряды на светлом */
+  --h: #2457D6; --t: #12865C; --u: #C7860A; --u-text: #9A6406;
+  /* те же разряды на тёмном флажке */
+  --h-on: #7FA2F5; --t-on: #41C48F; --u-on: #ECAE42; --i-on: #ECEEEB; --op-on: #A9AEB4;
+  /* табло */
+  --housing: #D3D6D2; --housing-edge: #B5B9B4;
+  --flap-up: #25282D; --flap-dn: #1B1D21; --hinge: #08090A; --pin: #9AA0A6;
+  --red: #E5322D; --red-ink: #C9261F;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-color: var(--ink-2) var(--page); }
+body {
+  margin: 0; background: var(--page); color: var(--ink);
+  font-family: "Golos Text", system-ui, sans-serif; font-size: 16px; line-height: 1.45;
+  font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--ink); color: var(--alu); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--page); }
+::-webkit-scrollbar-thumb { background: var(--ink-2); border: 3px solid var(--page); }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+input { caret-color: var(--red); font: inherit; color: inherit; }
+button { font: inherit; color: inherit; cursor: pointer; }
+h1, h2, h3, h4, p { margin: 0; }
+
+/* ── Шапка макета ── */
+.top { position: sticky; top: 0; z-index: 9; background: var(--page); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 1360px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 28px; }
+.mark { font-weight: 800; font-size: 20px; letter-spacing: -.01em; }
+.top nav { display: flex; gap: 4px; }
+.top nav a { color: var(--ink-2); text-decoration: none; padding: 6px 10px; font-weight: 500; border: 1px solid transparent; }
+.top nav a:hover { border-color: var(--line); color: var(--ink); }
+.top .note { margin-left: auto; color: var(--mute); font-size: 14px; }
+
+main { max-width: 1360px; margin: 0 auto; padding: 8px 24px 80px; }
+.screen { padding-top: 48px; scroll-margin-top: 56px; }
+.screen-head { display: flex; align-items: baseline; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+.screen-head h2 { font-size: 28px; font-weight: 800; letter-spacing: -.015em; }
+.screen-head p { color: var(--ink-2); max-width: 62ch; }
+
+/* ── Экран приложения ── */
+.app { background: var(--alu); border: 1px solid var(--line); }
+.bar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 14px 24px; border-bottom: 1px solid var(--line); }
+.bar h3 { font-size: 18px; font-weight: 700; }
+.bar .meta { color: var(--mute); font-size: 14px; }
+.bar .end { margin-left: auto; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; }
+.stage { padding: 44px 40px 28px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
+.side { border-left: 1px solid var(--line); min-width: 0; }
+.side-h, .sec-h { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 20px; border-bottom: 1px solid var(--line); font-weight: 700; }
+.side-h span, .sec-h span { font-weight: 400; color: var(--mute); font-size: 14px; }
+.sec-h { border-top: 1px solid var(--line); padding-left: 40px; padding-right: 40px; }
+
+/* ── Табло: корпус и флажки ── */
+.board {
+  --th: 112px; --gap: 6px;
+  position: relative; display: inline-flex; flex-wrap: wrap; gap: var(--gap); align-self: flex-start;
+  padding: 12px; background: var(--housing); border: 1px solid var(--housing-edge); border-radius: 5px;
+}
+.board.center { align-self: center; }
+.board .br { flex-basis: 100%; height: 0; display: none; }
+.board.narrow .br { display: block; }
+.tile {
+  position: relative; display: block; width: calc(var(--th) * .66); height: var(--th);
+  font-size: calc(var(--th) * .72); font-weight: 700; letter-spacing: -.02em;
+  border-radius: 4px; background: var(--flap-dn); perspective: calc(var(--th) * 4);
+}
+.tile::after { content: ""; position: absolute; left: 0; right: 0; top: calc(50% - 1px); height: 2px; background: var(--hinge); z-index: 4; }
+.tile::before {
+  content: ""; position: absolute; left: -2px; right: -2px; top: calc(50% - 4px); height: 8px; z-index: 5;
+  background: linear-gradient(to right, var(--pin) 0 2px, transparent 2px calc(100% - 2px), var(--pin) calc(100% - 2px));
+}
+.tile .h, .tile .f { position: absolute; left: 0; right: 0; height: 50%; overflow: hidden; }
+.tile .up { top: 0; border-radius: 4px 4px 0 0; background: var(--flap-up); }
+.tile .dn { bottom: 0; border-radius: 0 0 4px 4px; background: var(--flap-dn); }
+.tile .f { z-index: 3; backface-visibility: hidden; }
+.tile .f.up { transform-origin: 50% 100%; }
+.tile .f.dn { transform-origin: 50% 0; transform: rotateX(90deg); }
+.tile .h span, .tile .f span { display: block; height: var(--th); line-height: var(--th); text-align: center; color: var(--i-on); }
+.tile .dn span { transform: translateY(-50%); }
+.tile span.c-h { color: var(--h-on); } .tile span.c-t { color: var(--t-on); } .tile span.c-u { color: var(--u-on); }
+.tile span.c-op { color: var(--op-on); font-weight: 500; }
+.lit {
+  position: absolute; pointer-events: none; border: 2px solid var(--red); border-radius: 6px; z-index: 6;
+  transition: left .18s, top .18s, width .18s, height .18s;
+}
+.lit::before { content: ""; position: absolute; top: -14px; left: 50%; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: var(--red); }
+.lit[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .lit { transition: none; } }
+.lit.lamp-r::before { top: 50%; left: auto; right: -15px; margin: -4.5px 0 0; }
+.nw { white-space: nowrap; }
+.board:has(.catch:focus-visible) { outline: 2px solid var(--ink); outline-offset: 3px; }
+.board .catch { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; border: 0; padding: 0; cursor: text; z-index: 7; font-size: 16px; }
+
+/* ── Печатные метки ── */
+.stamp {
+  display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  padding: 3px 7px 2px; border: 1px solid var(--ink); color: var(--ink); line-height: 1.3; white-space: nowrap;
+}
+.stamp.fill { background: var(--ink); color: var(--alu); }
+.stamp.now { background: var(--red-ink); border-color: var(--red-ink); color: #fff; }
+.stamp.off { border-color: var(--line); color: var(--mute); }
+.stamp.gone { border-color: var(--line); color: var(--mute); text-decoration: line-through; text-decoration-thickness: 1px; }
+.chk { width: 14px; height: 14px; color: var(--ink); display: block; }
+
+/* ── Строки-рейсы ── */
+.dep { list-style: none; margin: 0; padding: 0; }
+.dep li { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 12px 20px; border-bottom: 1px solid var(--line-2); }
+.dep li:last-child { border-bottom: 0; }
+.dep .no { font-weight: 700; color: var(--mute); padding-top: 1px; }
+.dep li.past .no { color: var(--ink); }
+.dep li.ahead .txt { color: var(--mute); }
+.dep li.cur { background: var(--white); }
+.dep li.cur .no { color: var(--red-ink); }
+
+/* табло кадров: колонки */
+.frames { display: grid; grid-template-columns: 104px minmax(0, 1fr) 120px; }
+.frames > * { padding: 11px 0; border-bottom: 1px solid var(--line-2); }
+.frames .hd { font-size: 13px; color: var(--mute); font-weight: 500; padding: 9px 0; border-bottom-color: var(--line); }
+.frames .c1 { padding-left: 40px; font-weight: 700; color: var(--mute); }
+.frames .c3 { padding-right: 40px; display: flex; justify-content: flex-end; align-items: flex-start; }
+.frames .c2 { padding-right: 20px; }
+.frames button.c2 { all: unset; box-sizing: border-box; display: block; width: 100%; cursor: pointer; padding: 11px 20px 11px 0; border-bottom: 1px solid var(--line-2); color: var(--mute); }
+.frames button.c2:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.frames .past { color: var(--ink) !important; }
+.frames .cur { background: var(--white); color: var(--ink) !important; }
+.frames .c1.cur { color: var(--red-ink) !important; }
+.frames button.c2.cur { font-weight: 600; }
+.frames .last, .frames button.c2.last { border-bottom: 0; }
+
+/* ── Экран 1: разбор ── */
+.say { font-size: clamp(20px, 2vw, 26px); font-weight: 500; line-height: 1.35; max-width: 36ch; min-height: 2.7em; letter-spacing: -.005em; }
+.say b { font-weight: 700; }
+.nl { width: 100%; height: 150px; display: block; }
+.ctrl { display: flex; align-items: center; gap: 10px; margin-top: auto; flex-wrap: wrap; }
+.ctrl .hint { color: var(--mute); font-size: 14px; margin-right: auto; }
+.btn { border: 1px solid var(--ink); background: transparent; padding: 12px 20px; font-weight: 600; border-radius: 2px; display: inline-flex; align-items: center; gap: 10px; min-height: 48px; }
+.btn:hover { background: var(--white); }
+.btn.go { background: var(--ink); color: var(--alu); }
+.btn.go:hover { background: #2B2F34; }
+.btn:disabled { border-color: var(--line); color: var(--mute); background: transparent; cursor: default; }
+kbd { font: inherit; font-size: 12px; font-weight: 600; border: 1px solid currentColor; padding: 0 5px; border-radius: 2px; opacity: .8; }
+.t-touch { display: none; }
+@media (hover: none) { kbd, #razbor .ctrl .hint, .t-mouse { display: none; } .t-touch { display: inline; } }
+
+/* ── Экран 2: задача ── */
+.log li { grid-template-columns: 96px minmax(0, 1fr) auto; align-items: center; }
+.log .what { font-size: 14px; color: var(--mute); }
+.log .val { font-weight: 700; font-size: 18px; }
+.log .val > .board { margin-right: 8px; vertical-align: middle; }
+.log .why { display: block; font-weight: 400; font-size: 15px; color: var(--ink-2); margin-top: 6px; }
+.log .pair { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.log .pair .why { flex-basis: 100%; margin-top: 0; }
+.board.sm { --th: 38px; --gap: 3px; padding: 5px; border-radius: 4px; }
+.board.sm .tile::before { display: none; }
+.struck::after { content: ""; position: absolute; left: -4px; right: -4px; top: 50%; height: 2px; background: var(--ink); z-index: 8; transform: rotate(-8deg); }
+.mini { width: 76px; height: 40px; font-size: 22px; font-weight: 700; text-align: center; border: 1px dashed var(--ink-2); background: var(--white); border-radius: 2px; }
+.mini:focus { outline: 2px solid var(--red); outline-offset: 2px; }
+.helps { padding: 8px 0; }
+.help { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; width: 100%; text-align: left; background: transparent; border: 0; border-bottom: 1px solid var(--line-2); padding: 14px 20px; }
+.help:last-child { border-bottom: 0; }
+.help:hover:not(:disabled) { background: var(--white); }
+.help strong { font-weight: 700; }
+.help small { grid-column: 1 / -1; color: var(--ink-2); font-size: 14px; }
+.help:disabled { cursor: default; }
+.help:disabled strong { color: var(--mute); }
+.rule { padding: 14px 20px; border-top: 1px solid var(--line); color: var(--ink-2); font-size: 14px; }
+.other { border-top: 1px solid var(--line); display: none; }
+.other.on { display: block; }
+.other h4 { padding: 14px 20px 4px; font-size: 16px; }
+.other li { grid-template-columns: minmax(0, 1fr); }
+.other .steps { color: var(--ink-2); font-size: 15px; }
+
+/* ── Экран 3: поток ── */
+.flow-stage { align-items: center; text-align: center; }
+.pos { color: var(--mute); font-weight: 600; }
+.track { position: relative; width: 100%; max-width: 760px; height: 34px; }
+.track .bar-t { position: absolute; left: 0; top: 0; height: 10px; background: var(--ink); transform-origin: 0 50%; }
+.track .span { position: absolute; left: 0; top: 0; height: 10px; border: 1px solid var(--ink); }
+.track .rail { position: absolute; left: 0; right: 0; top: 4px; height: 1px; background: var(--line); }
+.track .tick { position: absolute; top: 14px; width: 1px; height: 6px; background: var(--ink-2); }
+.track .tick b { position: absolute; top: 7px; left: 0; transform: translateX(-50%); font-size: 12px; font-weight: 500; color: var(--mute); white-space: nowrap; }
+.ask { display: none; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.ask.on { display: flex; }
+.ask label { font-size: 22px; font-weight: 600; }
+.ask input { width: 140px; height: 64px; font-size: 40px; font-weight: 700; text-align: center; border: 1px dashed var(--ink-2); background: var(--white); border-radius: 3px; }
+.ask input:focus { outline: 2px solid var(--red); outline-offset: 3px; border-style: solid; }
+.result { min-height: 1.5em; font-size: 18px; color: var(--ink-2); max-width: 46ch; }
+.ladder li { align-items: center; padding: 9px 20px; }
+.ladder .spec { display: flex; flex-direction: column; gap: 5px; }
+.ladder .len { height: 4px; background: var(--ink-2); }
+.ladder li.ahead .len { background: var(--line); }
+.ladder li.cur .len { background: var(--ink); }
+
+@media (max-width: 1080px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .side { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 640px) {
+  .top-in { padding: 12px 16px; gap: 14px; flex-wrap: wrap; }
+  .top .note { display: none; }
+  .top nav a { padding: 6px 6px; }
+  main { padding: 0 16px 64px; }
+  .screen { padding-top: 36px; }
+  .screen-head h2 { font-size: 24px; }
+  .bar { padding: 12px 16px; }
+  .bar .end { margin-left: 0; flex-basis: 100%; }
+  .stamp { font-size: 11px; letter-spacing: .03em; padding: 3px 5px 2px; }
+  .stage { padding: 28px 16px 20px; gap: 22px; }
+  .board { padding: 8px; --gap: 4px; }
+  .sec-h { padding-left: 16px; padding-right: 16px; }
+  .frames { grid-template-columns: 60px minmax(0, 1fr) 84px; }
+  .frames .c1 { padding-left: 16px; }
+  .frames .c3 { padding-right: 16px; }
+  .dep li { padding: 11px 16px; }
+  .log li { grid-template-columns: minmax(0, 1fr) auto; }
+  .log li { grid-template-areas: "val val" "what stamp"; row-gap: 8px; }
+  .log li > .what { grid-area: what; }
+  .log li > .val { grid-area: val; }
+  .log li > .stamp { grid-area: stamp; justify-self: end; }
+  .ctrl { justify-content: flex-end; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="mark">В уме</div>
+    <nav aria-label="Экраны макета">
+      <a href="#razbor">Разбор</a><a href="#zadacha">Задача</a><a href="#potok">Поток</a>
+    </nav>
+    <p class="note">Макет 2.0 на согласование · примеры из движка</p>
+  </div>
+</header>
+
+<main>
+<!-- ═══ 1. Разбор ═══ -->
+<section class="screen" id="razbor" aria-labelledby="h-razbor">
+  <div class="screen-head">
+    <h2 id="h-razbor">Разбор приёма</h2>
+    <p>Шесть кадров на настоящем примере, в каждом одна мысль. Красная рамка с лампой — то, о чём речь сейчас. Листать — кнопками «Назад» и «Дальше».</p>
+  </div>
+  <div class="app">
+    <div class="bar">
+      <h3>Почти круглое: прибавляем</h3>
+      <span class="meta">Приём 4 из 9</span>
+      <div class="end"><span class="meta" id="r-count">Кадр 1 из 6</span></div>
+    </div>
+    <div class="stage">
+      <div class="board" id="r-board" data-n="9" data-max="112" role="img"></div>
+      <p class="say" id="r-say" aria-live="polite"></p>
+      <div id="r-line"></div>
+      <div class="ctrl">
+        <span class="hint"><kbd>←</kbd> <kbd>→</kbd> листать</span>
+        <button class="btn" id="r-prev">Назад</button>
+        <button class="btn go" id="r-next">Дальше <kbd>→</kbd></button>
+      </div>
+    </div>
+    <div class="sec-h">Кадры <span>87 + 98</span></div>
+    <div class="frames" id="r-dep"></div>
+  </div>
+</section>
+
+<!-- ═══ 2. Задача ═══ -->
+<section class="screen" id="zadacha" aria-labelledby="h-zadacha">
+  <div class="screen-head">
+    <h2 id="h-zadacha">Задача с подсказками</h2>
+    <p>Ответ скрыт до первой попытки. Ошибка не стирается: она остаётся зачёркнутой в журнале, рядом пояснение. Помощь можно взять в три ступени.</p>
+  </div>
+  <div class="app">
+    <div class="bar">
+      <h3>Почти круглое</h3>
+      <span class="meta">Задача 3 из 6</span>
+      <div class="end" id="z-levels" aria-label="Сколько помощи взято"></div>
+    </div>
+    <div class="grid">
+      <div class="stage">
+        <form id="z-form" autocomplete="off">
+          <div class="board" id="z-board" data-n="9" data-max="112" data-break="5">
+            <input class="catch" id="z-in" inputmode="numeric" maxlength="3" aria-label="Ответ: 64 плюс 98 равно">
+          </div>
+        </form>
+        <div class="ctrl">
+          <span class="hint"><span class="t-mouse">Набери ответ — он встанет на табло</span><span class="t-touch">Нажми на табло и набери ответ</span></span>
+          <button class="btn go" id="z-check" form="z-form">Проверить <kbd>Enter</kbd></button>
+        </div>
+        <ol class="dep log" id="z-log" aria-live="polite"></ol>
+      </div>
+      <aside class="side" aria-label="Подсказки">
+        <div class="side-h">Подсказки <span>по ступеням</span></div>
+        <div class="helps">
+          <button class="help" id="h-trick" disabled><strong>Приём</strong><span class="stamp fill">взята</span><small>Почти круглое: 98 = 100 − 2</small></button>
+          <button class="help" id="h-step"><strong>Первый шаг</strong><span class="stamp off">открыть</span><small>Покажу, с чего начать. Зачёта не будет, похожий пример придёт позже.</small></button>
+          <button class="help" id="h-ans"><strong>Ответ</strong><span class="stamp off">открыть</span><small>Открывается только после попытки. Без зачёта.</small></button>
+        </div>
+        <p class="rule">Зачёт — если решил сам или только с приёмом.</p>
+        <div class="other" id="z-other">
+          <h4>Реши по-другому</h4>
+          <ol class="dep" id="z-ways"></ol>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. Поток ═══ -->
+<section class="screen" id="potok" aria-labelledby="h-potok">
+  <div class="screen-head">
+    <h2 id="h-potok">Поток</h2>
+    <p>Числа идут по одному, сумму держишь в уме. Длина полоски равна времени показа. На каждом третьем подходе посередине спросим: «Сколько сейчас?»</p>
+  </div>
+  <div class="app">
+    <div class="bar">
+      <h3>Поток · десятки</h3>
+      <span class="meta">Ступень 6 из 11 · 6 чисел по 2&nbsp;секунды</span>
+      <div class="end"><span class="meta">Лучшее: ступень 5</span></div>
+    </div>
+    <div class="grid">
+      <div class="stage flow-stage">
+        <p class="pos" id="f-pos">Число 3 из 6</p>
+        <div class="board center" id="f-board" data-n="3" data-max="210" role="img"></div>
+        <div class="track" id="f-track" aria-hidden="true"><div class="rail"></div><div class="bar-t" id="f-bar"></div></div>
+        <div class="ask" id="f-ask">
+          <label for="f-in" id="f-q">Сколько сейчас?</label>
+          <input id="f-in" inputmode="numeric" maxlength="4" autocomplete="off">
+          <button class="btn go" id="f-ok">Ответить <kbd>Enter</kbd></button>
+        </div>
+        <p class="result" id="f-res" aria-live="polite"></p>
+        <div class="ctrl"><button class="btn go" id="f-start">Начать подход</button></div>
+      </div>
+      <aside class="side" aria-label="Лестница ступеней">
+        <div class="side-h">Лестница <span>полоска = время показа</span></div>
+        <ol class="dep ladder" id="f-ladder"></ol>
+      </aside>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+const RM = matchMedia("(prefers-reduced-motion: reduce)");
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+const CHECK = '<svg class="chk" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+const NB = " ";
+
+/* ── Табло ── */
+const placeCls = (len, i) => ["c-u", "c-t", "c-h"][len - 1 - i] || "c-h";
+/* строка → ячейки фиксированной длины; число красится по разрядам */
+function cellsOf(str, n, right = false) {
+  const cells = [];
+  (str.replace(/\s+/g, "").match(/\d+|./g) || []).forEach((t) => {
+    if (/^\d+$/.test(t)) [...t].forEach((d, i) => cells.push({ ch: d, cls: placeCls(t.length, i) }));
+    else cells.push({ ch: t, cls: "c-op" });
+  });
+  const pad = Array.from({ length: Math.max(0, n - cells.length) }, () => ({ ch: "", cls: "" }));
+  return right ? [...pad, ...cells] : [...cells, ...pad];
+}
+function makeTile() {
+  const t = el("span", "tile", `<span class="h up"><span></span></span><span class="h dn"><span></span></span>`);
+  t.dataset.ch = ""; t.dataset.cls = ""; t.setAttribute("aria-hidden", "true");
+  return t;
+}
+/* перещёлк: верх старого падает, низ нового ложится с лёгким отскоком; без анимации при reduced motion */
+function setCell(t, { ch, cls }, delay = 0) {
+  const old = { ch: t.dataset.ch, cls: t.dataset.cls };
+  if (old.ch === ch && old.cls === cls) return;
+  t.dataset.ch = ch; t.dataset.cls = cls;
+  const up = t.querySelector(".h.up span"), dn = t.querySelector(".h.dn span");
+  const paint = (s, c) => { s.textContent = c.ch; s.className = c.cls; };
+  t.querySelectorAll(".f").forEach((f) => f.remove());
+  if (RM.matches) { paint(up, { ch, cls }); paint(dn, { ch, cls }); return; }
+  setTimeout(() => {
+    if (t.dataset.ch !== ch || t.dataset.cls !== cls) return;
+    paint(up, { ch, cls }); paint(dn, old);
+    const fu = el("span", "f up", "<span></span>"), fd = el("span", "f dn", "<span></span>");
+    paint(fu.firstChild, old); paint(fd.firstChild, { ch, cls });
+    t.append(fu, fd);
+    fu.animate([{ transform: "rotateX(0)" }, { transform: "rotateX(-90deg)" }], { duration: 90, easing: "ease-in", fill: "forwards" });
+    fd.animate([{ transform: "rotateX(90deg)" }, { transform: "rotateX(-7deg)", offset: .78 }, { transform: "rotateX(0)" }], { duration: 90, delay: 90, easing: "ease-out", fill: "forwards" })
+      .finished.then(() => { if (t.dataset.ch === ch) { paint(dn, { ch, cls }); fu.remove(); fd.remove(); } });
+  }, delay);
+}
+function initBoard(b) {
+  const n = +b.dataset.n, br = +b.dataset.break || 0;
+  for (let i = 0; i < n; i++) { if (br && i === br) b.append(el("span", "br")); b.append(makeTile()); }
+  b.append(Object.assign(el("span", "lit"), { hidden: true }));
+  fitBoard(b);
+}
+const tilesOf = (b) => [...b.querySelectorAll(":scope > .tile")];
+/* флажки листаются только там, где символ поменялся */
+function showOnBoard(b, cells, label) {
+  let k = 0;
+  tilesOf(b).forEach((t, i) => {
+    const c = cells[i] || { ch: "", cls: "" };
+    if (t.dataset.ch !== c.ch || t.dataset.cls !== c.cls) setCell(t, c, k++ * 28);
+  });
+  if (label != null) b.setAttribute("aria-label", label);
+}
+function light(b, from, to) {
+  const lit = b.querySelector(".lit");
+  b._lit = from == null ? null : [from, to];
+  if (from == null) { lit.hidden = true; return; }
+  const ts = tilesOf(b), a = ts[from], z = ts[to - 1], p = 5;
+  lit.hidden = false;
+  lit.classList.toggle("lamp-r", a.offsetTop > 20); /* во втором ряду лампа сбоку, чтобы не лечь на флажок выше */
+  Object.assign(lit.style, {
+    left: a.offsetLeft - p + "px", top: a.offsetTop - p + "px",
+    width: z.offsetLeft + z.offsetWidth - a.offsetLeft + p * 2 + "px", height: a.offsetHeight + p * 2 + "px",
+  });
+}
+function fitBoard(b) {
+  const n = +b.dataset.n, br = +b.dataset.break || 0, max = +b.dataset.max || 112;
+  const ps = getComputedStyle(b.parentElement);
+  const inner = b.parentElement.clientWidth - parseFloat(ps.paddingLeft) - parseFloat(ps.paddingRight);
+  const small = innerWidth <= 640, gap = small ? 4 : 6;
+  const avail = inner - 2 - (small ? 16 : 24);
+  const per = (k) => (avail - gap * (k - 1)) / k / 0.66;
+  let th = per(n), narrow = false;
+  if (br && th < 72) { narrow = true; th = per(Math.max(br, n - br)); }
+  b.classList.toggle("narrow", narrow);
+  b.style.setProperty("--th", Math.floor(Math.min(max, th)) + "px");
+  if (b._lit) requestAnimationFrame(() => light(b, ...b._lit));
+}
+const BOARDS = ["r-board", "z-board", "f-board"].map($);
+BOARDS.forEach(initBoard);
+addEventListener("resize", () => BOARDS.forEach(fitBoard));
+document.fonts.ready.then(() => BOARDS.forEach(fitBoard));
+
+/* ═══ 1. Разбор: тексты кадров из story("nearUp", 87 + 98); табло — одна строка, меняются только позиции ═══ */
+const BEATS = [
+  { say: "Цена 98 рублей — это почти 100. Отдал сотню, вернули 2.", board: "87+98", lit: [3, 5], pic: "near" },
+  { say: "Это число почти круглое.", board: "87+98", lit: [3, 5], pic: "near" },
+  { say: "Превращаем: 98 → 100 − 2.", board: "87+100−2", lit: [3, 8], pic: 0 },
+  { say: "Прибавили круглое 100: 87 + 100 = 187.", board: "187−2", lit: [0, 3], pic: 1 },
+  { say: "Вернули лишние 2: 187 − 2 = 185.", board: "185", lit: [0, 3], pic: 2 },
+  { say: "Готово: 185.", board: "87+98=185", lit: [6, 9], pic: 3 },
+];
+const JUMPS = [{ from: 87, by: 100 }, { from: 187, by: -2 }];
+let beat = 0;
+
+const EXPR = /(\d+(?:\s?[+−]\s?\d+)*\s?=\s?\d+|\d+ → \d+ − \d+)/g;
+function sayHtml(s, tag = "b") { return s.replace(EXPR, `<${tag} class="nw">$1</${tag}>`); }
+const lineW = () => Math.max(300, $("r-line").clientWidth || 640);
+
+/* кадры 1–2: картинка раньше записи — от 98 до 100 всего два шага */
+function nearLine() {
+  const W = lineW(), L = 24, R = W - 24, lo = 89, hi = 101, X = (v) => L + ((v - lo) / (hi - lo)) * (R - L), Y = 104;
+  let s = `<svg class="nl" viewBox="0 0 ${W} 150" role="img" aria-label="Числовая прямая: от 98 до 100 всего 2">`;
+  s += `<line x1="4" y1="${Y}" x2="${W - 4}" y2="${Y}" stroke="var(--ink-2)" stroke-width="1"/>`;
+  for (let v = 90; v <= 100; v++) s += `<line x1="${X(v)}" y1="${Y - (v % 10 ? 5 : 10)}" x2="${X(v)}" y2="${Y + (v % 10 ? 5 : 10)}" stroke="var(--ink-2)" stroke-width="${v % 10 ? 1 : 1.5}"/>`;
+  const a = X(98), b = X(100), m = (a + b) / 2;
+  s += `<path d="M${a} ${Y - 8} Q ${m} ${Y - 62} ${b} ${Y - 8}" fill="none" stroke="var(--mute)" stroke-width="1.5" stroke-dasharray="5 5"/>`;
+  s += `<text x="${m}" y="${Y - 44}" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">всего 2</text>`;
+  s += `<circle cx="${a}" cy="${Y}" r="6" fill="var(--red)"/>`;
+  s += `<text x="${X(90)}" y="${Y + 32}" text-anchor="middle" font-size="16" fill="var(--mute)">90</text>`;
+  s += `<text x="${a}" y="${Y + 32}" text-anchor="middle" font-size="17" font-weight="700" fill="var(--red-ink)">98</text>`;
+  s += `<text x="${b}" y="${Y + 32}" text-anchor="middle" font-size="17" font-weight="700" fill="var(--ink)">100</text>`;
+  return s + "</svg>";
+}
+/* кадры 3–6: прыжки; пунктир — впереди, сплошная — пройдено, красная — сейчас */
+function jumpLine(done, cur) {
+  const pts = [JUMPS[0].from, ...JUMPS.map((j) => j.from + j.by)];
+  const sorted = [...new Set(pts)].sort((a, b) => a - b);
+  const W = lineW(), lo = sorted[0], hi = sorted.at(-1), L = 28, R = W - 28, MIN = 64;
+  let xs = sorted.map((v) => L + ((v - lo) / (hi - lo)) * (R - L));
+  for (let i = 1; i < xs.length; i++) xs[i] = Math.max(xs[i], xs[i - 1] + MIN);
+  const k = (R - L) / (xs.at(-1) - L); xs = xs.map((x) => L + (x - L) * k);
+  const X = (v) => xs[sorted.indexOf(v)], Y = 112;
+  let s = `<svg class="nl" viewBox="0 0 ${W} 150" role="img" aria-label="Числовая прямая: ${pts.join(" → ")}">`;
+  s += `<line x1="4" y1="${Y}" x2="${W - 4}" y2="${Y}" stroke="var(--ink-2)" stroke-width="1"/>`;
+  JUMPS.forEach((j, i) => {
+    const a = X(j.from), b = X(j.from + j.by), h = Math.min(78, 26 + Math.abs(b - a) * 0.18);
+    const state = i < done ? "done" : i === cur ? "cur" : "ahead";
+    const col = state === "cur" ? "var(--red)" : state === "done" ? "var(--ink)" : "var(--mute)";
+    const st = `stroke="${col}" stroke-width="${state === "ahead" ? 1.5 : 2}"`, dash = state === "ahead" ? ` stroke-dasharray="5 5"` : "";
+    const mx = (a + b) / 2, top = Y - h;
+    s += `<path d="M${a} ${Y - 4} Q ${mx} ${top - h * 0.55} ${b} ${Y - 4}" fill="none" ${st}${dash}/>`;
+    const dir = b > a ? -1 : 1;
+    s += `<path d="M${b + dir * 7} ${Y - 12} L${b} ${Y - 4} L${b + dir * 9} ${Y - 2}" fill="none" ${st}/>`;
+    s += `<text x="${mx}" y="${top - h * 0.3}" text-anchor="middle" font-size="17" font-weight="700" fill="${state === "cur" ? "var(--red-ink)" : state === "done" ? "var(--ink)" : "var(--mute)"}">${j.by > 0 ? "+" : "−"}${Math.abs(j.by)}</text>`;
+  });
+  sorted.forEach((v) => {
+    const reached = pts.some((p, i) => p === v && (i === 0 || i - 1 < done || i - 1 === cur));
+    s += `<line x1="${X(v)}" y1="${Y - 6}" x2="${X(v)}" y2="${Y + 6}" stroke="var(--ink)" stroke-width="1.5"/>`;
+    s += `<text x="${X(v)}" y="${Y + 28}" text-anchor="middle" font-size="17" font-weight="${reached ? 700 : 500}" fill="${reached ? "var(--ink)" : "var(--mute)"}">${v}</text>`;
+  });
+  return s + "</svg>";
+}
+function drawPic() {
+  const p = BEATS[beat].pic;
+  $("r-line").innerHTML = p === "near" ? nearLine() : p === 0 ? jumpLine(0, -1) : p === 3 ? jumpLine(2, -1) : jumpLine(p - 1, p - 1);
+}
+function showBeat(i) {
+  beat = Math.max(0, Math.min(BEATS.length - 1, i));
+  const b = BEATS[beat], board = $("r-board");
+  showOnBoard(board, cellsOf(b.board, 9), b.board.replace(/([+−=])/g, " $1 "));
+  light(board, ...b.lit);
+  $("r-say").innerHTML = sayHtml(b.say);
+  $("r-count").textContent = `Кадр ${beat + 1} из ${BEATS.length}`;
+  drawPic();
+  $("r-prev").disabled = beat === 0;
+  $("r-next").innerHTML = beat === BEATS.length - 1 ? "К задаче <kbd>→</kbd>" : "Дальше <kbd>→</kbd>";
+  const dep = $("r-dep"); dep.innerHTML = "";
+  [["Кадр", "c1"], ["Что происходит", "c2"], ["Статус", "c3"]].forEach(([t, c]) => dep.append(el("span", `hd ${c}`, t)));
+  BEATS.forEach((x, k) => {
+    const st = k < beat ? "past" : k === beat ? "cur" : "ahead", last = k === BEATS.length - 1 ? " last" : "";
+    dep.append(el("span", `c1 ${st}${last}`, String(k + 1).padStart(2, "0")));
+    const tb = el("button", `c2 ${st}${last}`, sayHtml(x.say, "span")); tb.onclick = () => showBeat(k); dep.append(tb);
+    dep.append(el("span", `c3 ${st}${last}`, st === "cur" ? `<span class="stamp now">сейчас</span>` : st === "past" ? CHECK : ""));
+  });
+}
+$("r-prev").onclick = () => showBeat(beat - 1);
+$("r-next").onclick = () => (beat === BEATS.length - 1 ? (location.hash = "zadacha") : showBeat(beat + 1));
+document.addEventListener("keydown", (e) => {
+  if (e.target.closest("input, textarea")) return;
+  if (!$("razbor").contains(document.activeElement) && document.activeElement !== document.body) return;
+  if (e.key === "ArrowRight") { e.preventDefault(); showBeat(beat + 1); }
+  if (e.key === "ArrowLeft") { e.preventDefault(); showBeat(beat - 1); }
+});
+addEventListener("resize", drawPic);
+showBeat(0);
+
+/* ═══ 2. Задача: 64 + 98 (nearUp, ступень 2) ═══ */
+const TASK = "64+98=", ANSWER = 162;
+const STEP = { prompt: "64 + 100 =", expect: 164 };
+const SOLVE = ["98 → 100 − 2", "64 + 100 = 164", "164 − 2 = 162"];
+const WAYS = [
+  { title: "Мост через круглое", steps: ["98 → 36 + 62", "64 + 36 = 100", "100 + 62 = 162"] },
+  { title: "По частям", steps: ["98 → 90 + 8", "64 + 90 = 154", "154 + 8 = 162"] },
+];
+const LEVELS = ["сам", "с приёмом", "с шагом", "с ответом"];
+const zb = $("z-board"), zin = $("z-in");
+let help = 1, tries = 1, solved = false;
+
+/* маленькое табло для журнала; зачёркнутое — ошибка, которая остаётся */
+function mini(str, struck) {
+  const b = el("span", "board sm" + (struck ? " struck" : ""));
+  cellsOf(str, str.length).forEach((c) => { const t = makeTile(); b.append(t); setCell(t, c); });
+  b.setAttribute("role", "img");
+  b.setAttribute("aria-label", (struck ? "зачёркнуто " : "") + str);
+  return b;
+}
+function drawLevels() {
+  const box = $("z-levels"); box.innerHTML = "";
+  LEVELS.forEach((l, i) => box.append(el("span", "stamp " + (i < help ? "gone" : i === help ? "fill" : "off"), l)));
+}
+function logRow(what, val, stamp) {
+  const li = el("li", "past");
+  li.append(el("span", "what", what));
+  const v = el("span", "val"); typeof val === "string" ? (v.innerHTML = val) : v.append(...val); li.append(v);
+  if (stamp) li.append(stamp);
+  $("z-log").append(li);
+  return li;
+}
+const why = (t) => el("span", "why", t);
+function typed() {
+  const v = zin.value.replace(/\D/g, "").slice(0, 3); zin.value = v;
+  showOnBoard(zb, [...cellsOf(TASK, 6), ...cellsOf(v, 3)], `64 + 98 = ${v || "?"}`);
+}
+zin.addEventListener("input", typed);
+$("z-form").onsubmit = (e) => {
+  e.preventDefault();
+  if (solved) return;
+  const v = zin.value;
+  if (!/^\d+$/.test(v)) { zin.focus(); return; }
+  tries++;
+  if (+v === ANSWER) {
+    solved = true; zin.disabled = true;
+    logRow(`Попытка ${tries}`, [mini(v), why(help <= 1 ? "Зачёт. Приём сработал." : "Верно. Зачёта нет — похожий пример придёт позже.")], el("span", "stamp fill", "верно"));
+    $("z-other").classList.add("on");
+    $("h-step").disabled = $("h-ans").disabled = true;
+  } else {
+    logRow(`Попытка ${tries}`, [mini(v, true), why("Не сходится. Проверь второй шаг: что вернуть после + 100?")], el("span", "stamp", "мимо"));
+    zin.value = ""; typed(); zin.focus();
+  }
+};
+$("h-step").onclick = () => {
+  help = Math.max(help, 2); drawLevels();
+  const hs = $("h-step"); hs.disabled = true; hs.querySelector(".stamp").className = "stamp fill"; hs.querySelector(".stamp").textContent = "взят";
+  const q = el("span", "pair", STEP.prompt);
+  const mi = el("input", "mini"); mi.inputMode = "numeric"; mi.maxLength = 4; mi.setAttribute("aria-label", STEP.prompt);
+  q.append(mi);
+  const li = logRow("Шаг", [q]);
+  mi.onkeydown = (e) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    const v = mi.value.replace(/\D/g, ""); if (!v) return;
+    const ok = +v === STEP.expect;
+    mi.replaceWith(mini(v, !ok));
+    if (!ok) q.append(mini(String(STEP.expect)), why("Сотню прибавляем к сотням: 64 + 100 = 164."));
+    li.append(el("span", "stamp" + (ok ? " fill" : ""), ok ? "верно" : "мимо"));
+    zin.focus();
+  };
+  mi.focus();
+};
+$("h-ans").onclick = () => {
+  help = 3; drawLevels();
+  const ha = $("h-ans"); ha.disabled = $("h-step").disabled = true; ha.querySelector(".stamp").className = "stamp fill"; ha.querySelector(".stamp").textContent = "взят";
+  logRow("Ответ", SOLVE.join("<br>"), el("span", "stamp", "без зачёта"));
+};
+WAYS.forEach((w) => { const li = el("li", "past"); li.append(el("span", "txt", `<strong>${w.title}</strong><span class="steps"><br>${w.steps.join(" · ")}</span>`)); $("z-ways").append(li); });
+(function initTask() {
+  showOnBoard(zb, cellsOf(TASK, 9), "64 + 98 = ?");
+  light(zb, 6, 9);
+  logRow("Попытка 1", [mini("166", true), why("166 — это 164 + 2. Двойку надо не прибавить, а вернуть: 98 — это 100 без 2.")], el("span", "stamp", "мимо"));
+  logRow("Подсказка", `Приём: почти круглое<span class="why">Прибавь круглое, а потом поправь: 98 = 100 − 2, значит + 100 и − 2.</span>`, el("span", "stamp fill", "взята"));
+  drawLevels();
+})();
+
+/* ═══ 3. Поток: flowNumbers("tens", 6), ступень 6 ═══ */
+const LADDER = [[3,1,3000,0],[3,2,3000,0],[4,2,3000,0],[5,2,3000,0],[6,2,3000,0],[6,2,2000,0],[8,2,2000,0],[8,2,2000,2],[10,2,2000,2],[10,2,2000,"any"],[10,2,1500,"any"]];
+const NS = [56, 58, 63, 58, 58, 70], SUMS = NS.reduce((a, n) => [...a, (a.at(-1) || 0) + n], []), SHOW = 2000, CP = 2, TRACK_MS = 4000, CUR = 6;
+const fb = $("f-board"), fBar = $("f-bar");
+
+(function ladder() {
+  const ol = $("f-ladder");
+  LADDER.forEach(([c, d, ms, m], i) => {
+    const n = i + 1, st = n < CUR ? "past" : n === CUR ? "cur" : "ahead";
+    const li = el("li", st);
+    li.append(el("span", "no", String(n).padStart(2, "0")));
+    const sec = (ms / 1000).toLocaleString("ru") + NB + "с";
+    const spec = el("span", "spec txt", `<span>${c}${NB}× ${d === 1 ? "однозначные" : "двузначные"}${m ? (m === "any" ? ", минусы" : ", 2 минуса") : ""} · ${sec}</span>`);
+    spec.append(Object.assign(el("span", "len"), { style: `width:${(ms / TRACK_MS) * 100}%` }));
+    li.append(spec);
+    li.append(st === "cur" ? el("span", "stamp now", "сейчас") : n === 7 ? el("span", "stamp off", "откроет сотни") : st === "past" ? el("span", "", CHECK) : el("span", ""));
+    ol.append(li);
+  });
+})();
+(function ticks() {
+  const tr = $("f-track");
+  for (let ms = 0; ms <= TRACK_MS; ms += 500) {
+    const t = el("span", "tick", ms % 1000 === 0 ? `<b>${ms / 1000}${NB}с</b>` : ""); t.style.left = (ms / TRACK_MS) * 100 + "%"; tr.append(t);
+  }
+  /* контур — полное время показа, заливка внутри — сколько осталось */
+  const sp = el("span", "span"); sp.style.width = (SHOW / TRACK_MS) * 100 + "%"; tr.insertBefore(sp, fBar);
+  fBar.style.width = (SHOW / TRACK_MS) * 100 + "%";
+})();
+
+let run = 0;
+function bar(frac) { fBar.getAnimations().forEach((a) => a.cancel()); fBar.style.transform = `scaleX(${frac})`; }
+function drain() {
+  if (RM.matches) { bar(1); return wait(SHOW); }
+  fBar.style.transform = "";
+  return fBar.animate([{ transform: "scaleX(1)" }, { transform: "scaleX(0)" }], { duration: SHOW, easing: "linear", fill: "forwards" }).finished.catch(() => {});
+}
+function ask(q) {
+  return new Promise((res) => {
+    $("f-q").textContent = q; $("f-ask").classList.add("on");
+    const inp = $("f-in"); inp.value = ""; inp.focus();
+    const go = () => { const v = inp.value.trim(); if (!/^\d+$/.test(v)) return; $("f-ask").classList.remove("on"); $("f-ok").onclick = inp.onkeydown = null; res(+v); };
+    $("f-ok").onclick = go; inp.onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); go(); } };
+  });
+}
+/* между числами — пустые флажки: иначе 58 и 58 подряд слились бы */
+function showNum(n) { showOnBoard(fb, cellsOf(n == null ? "" : String(n), 3, true), n == null ? "" : String(n)); }
+
+async function start() {
+  const id = ++run;
+  $("f-start").disabled = true; $("f-res").textContent = "";
+  for (let i = 0; i < NS.length; i++) {
+    if (id !== run) return;
+    showNum(null); await wait(240);
+    $("f-pos").textContent = `Число ${i + 1} из ${NS.length}`;
+    showNum(NS[i]); await drain();
+    if (i === CP) {
+      showNum(null); bar(0);
+      const said = await ask("Сколько сейчас?");
+      $("f-res").textContent = said === SUMS[i] ? `Да, ${SUMS[i]}. Держи и дальше.` : `Сейчас ${SUMS[i]}. Продолжай от этого числа.`;
+      await wait(1200); $("f-res").textContent = "";
+    }
+  }
+  showNum(null); bar(0); $("f-pos").textContent = "Все 6 чисел";
+  const said = await ask("Сколько всего?");
+  const tot = SUMS.at(-1), d = said - tot;
+  $("f-res").textContent = d === 0
+    ? `Верно: ${tot}. Ещё один чистый подход — и ступень 7.`
+    : `Итог ${tot}, у тебя ${said}: разница ${d > 0 ? "+" : "−"}${Math.abs(d)}. ${Math.abs(d) % 10 === 0 ? "Потерялся десяток — проверь, где переходил через сотню." : "Сбились единицы."}`;
+  showNum(tot);
+  $("f-start").disabled = false; $("f-start").textContent = "Ещё подход";
+}
+$("f-start").onclick = start;
+/* стоп-кадр: третье число на табло, полоска наполовину */
+showNum(NS[2]); bar(0.45);
+</script>
+</body>
+</html>

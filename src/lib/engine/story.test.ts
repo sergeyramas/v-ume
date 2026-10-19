@@ -14,8 +14,9 @@ describe("простые объяснения", () => {
         assert.ok(beats.length >= 4 && beats.length <= 14, `${beats.length} кадров`);
         for (const b of beats) {
           assert.ok(words(b.say) <= MAX_WORDS, `длинно (${words(b.say)}): ${b.say}`);
-          if (b.focus && (b.show.kind === "expr" || b.show.kind === "done"))
-            assert.ok(b.focus.every((k) => k >= 0 && k < b.show.tokens.length), JSON.stringify(b));
+          const sh = b.show;
+          if (b.focus && (sh.kind === "expr" || sh.kind === "done"))
+            assert.ok(b.focus.every((k) => k >= 0 && k < sh.tokens.length), JSON.stringify(b));
         }
         const last = beats.at(-1)!;
         assert.equal(last.show.kind, "done");

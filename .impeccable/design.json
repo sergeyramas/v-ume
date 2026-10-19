@@ -1,0 +1,611 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-19T19:46:01+00:00",
+  "title": "Design System: В уме",
+  "extensions": {
+    "colorMeta": {
+      "page": {
+        "role": "neutral",
+        "displayName": "Лист",
+        "canonical": "#E3E5E2",
+        "tonalRamp": [
+          "#0A0C0A",
+          "#242623",
+          "#414240",
+          "#60625F",
+          "#818380",
+          "#A4A6A3",
+          "#C8CAC7",
+          "#EDEFEC"
+        ]
+      },
+      "alu": {
+        "role": "neutral",
+        "displayName": "Алюминий",
+        "canonical": "#F2F3F1",
+        "tonalRamp": [
+          "#0B0B0A",
+          "#252524",
+          "#414241",
+          "#616160",
+          "#828381",
+          "#A4A5A3",
+          "#C8C9C7",
+          "#EEEFED"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Графит",
+        "canonical": "#16181B",
+        "tonalRamp": [
+          "#090B0E",
+          "#232528",
+          "#404246",
+          "#5F6165",
+          "#808286",
+          "#A2A5A9",
+          "#C6C9CE",
+          "#ECEFF3"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Графит-2",
+        "canonical": "#4A4F55",
+        "tonalRamp": [
+          "#080B10",
+          "#21252B",
+          "#3E4248",
+          "#5D6268",
+          "#7D8389",
+          "#A0A6AC",
+          "#C4CAD1",
+          "#E9EFF6"
+        ]
+      },
+      "mute": {
+        "role": "neutral",
+        "displayName": "Приглушённый",
+        "canonical": "#62676D",
+        "tonalRamp": [
+          "#080B10",
+          "#21252B",
+          "#3E4248",
+          "#5D6268",
+          "#7E8389",
+          "#A0A6AC",
+          "#C4CAD0",
+          "#E9EFF6"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Линия",
+        "canonical": "#C8CBC7",
+        "tonalRamp": [
+          "#0A0C09",
+          "#242623",
+          "#40433F",
+          "#5F625F",
+          "#808380",
+          "#A3A6A2",
+          "#C7CAC6",
+          "#ECEFEB"
+        ]
+      },
+      "line-2": {
+        "role": "neutral",
+        "displayName": "Линия-2",
+        "canonical": "#DADDD9",
+        "tonalRamp": [
+          "#0A0C09",
+          "#242623",
+          "#404340",
+          "#5F625F",
+          "#808380",
+          "#A3A6A2",
+          "#C7CAC6",
+          "#ECEFEB"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Белый",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#0B0B0B",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#A5A5A5",
+          "#C9C9C9",
+          "#EEEEEE"
+        ]
+      },
+      "h": {
+        "role": "secondary",
+        "displayName": "Сотни, синие",
+        "canonical": "#2457D6",
+        "tonalRamp": [
+          "#040049",
+          "#000777",
+          "#042EA8",
+          "#2153D2",
+          "#4178F9",
+          "#6AA0FF",
+          "#95C6FF",
+          "#C1EEFF"
+        ]
+      },
+      "t": {
+        "role": "secondary",
+        "displayName": "Десятки, зелёные",
+        "canonical": "#12865C",
+        "tonalRamp": [
+          "#001401",
+          "#003314",
+          "#00542E",
+          "#00754C",
+          "#2E986C",
+          "#57BC8E",
+          "#89DEB4",
+          "#B8FFDC"
+        ]
+      },
+      "u": {
+        "role": "secondary",
+        "displayName": "Единицы, янтарные",
+        "canonical": "#C7860A",
+        "tonalRamp": [
+          "#1E0100",
+          "#411800",
+          "#663400",
+          "#8D5200",
+          "#B37300",
+          "#D8962A",
+          "#FEBB5A",
+          "#FFE390"
+        ]
+      },
+      "u-text": {
+        "role": "secondary",
+        "displayName": "Единицы, текст на светлом",
+        "canonical": "#9A6406",
+        "tonalRamp": [
+          "#200000",
+          "#421700",
+          "#663400",
+          "#895400",
+          "#AD7524",
+          "#D2984C",
+          "#F3BE7D",
+          "#FFE5AC"
+        ]
+      },
+      "h-on": {
+        "role": "secondary",
+        "displayName": "Сотни на флажке",
+        "canonical": "#7FA2F5",
+        "tonalRamp": [
+          "#01062A",
+          "#102150",
+          "#273E79",
+          "#415DA4",
+          "#5E7FCF",
+          "#7FA2F5",
+          "#A2C7FF",
+          "#C9EDFF"
+        ]
+      },
+      "t-on": {
+        "role": "secondary",
+        "displayName": "Десятки на флажке",
+        "canonical": "#41C48F",
+        "tonalRamp": [
+          "#001302",
+          "#003216",
+          "#005330",
+          "#00764B",
+          "#009B69",
+          "#3BBF8B",
+          "#67E5AE",
+          "#98FFD5"
+        ]
+      },
+      "u-on": {
+        "role": "secondary",
+        "displayName": "Единицы на флажке",
+        "canonical": "#ECAE42",
+        "tonalRamp": [
+          "#1A0500",
+          "#3B1D00",
+          "#5F3800",
+          "#865600",
+          "#AE7600",
+          "#D59825",
+          "#FBBD53",
+          "#FFE27D"
+        ]
+      },
+      "i-on": {
+        "role": "neutral",
+        "displayName": "Цифра на флажке",
+        "canonical": "#ECEEEB",
+        "tonalRamp": [
+          "#0A0C0A",
+          "#242623",
+          "#414240",
+          "#60625F",
+          "#818380",
+          "#A4A6A3",
+          "#C8CAC7",
+          "#EDEFEC"
+        ]
+      },
+      "op-on": {
+        "role": "neutral",
+        "displayName": "Знак на флажке",
+        "canonical": "#A9AEB4",
+        "tonalRamp": [
+          "#080B0F",
+          "#22252A",
+          "#3E4247",
+          "#5D6267",
+          "#7E8388",
+          "#A1A6AB",
+          "#C5CAD0",
+          "#EAEFF5"
+        ]
+      },
+      "housing": {
+        "role": "neutral",
+        "displayName": "Корпус табло",
+        "canonical": "#D3D6D2",
+        "tonalRamp": [
+          "#0A0C09",
+          "#242623",
+          "#404340",
+          "#5F625F",
+          "#808380",
+          "#A3A6A2",
+          "#C7CAC6",
+          "#ECEFEB"
+        ]
+      },
+      "housing-edge": {
+        "role": "neutral",
+        "displayName": "Кант корпуса",
+        "canonical": "#B5B9B4",
+        "tonalRamp": [
+          "#090C09",
+          "#232622",
+          "#40433F",
+          "#5F625E",
+          "#80847F",
+          "#A2A6A1",
+          "#C6CAC5",
+          "#ECF0EB"
+        ]
+      },
+      "flap-up": {
+        "role": "neutral",
+        "displayName": "Верхний флажок",
+        "canonical": "#25282D",
+        "tonalRamp": [
+          "#090B10",
+          "#22252A",
+          "#3F4248",
+          "#5E6167",
+          "#7F8289",
+          "#A1A5AC",
+          "#C5C9D0",
+          "#EBEFF6"
+        ]
+      },
+      "flap-dn": {
+        "role": "neutral",
+        "displayName": "Нижний флажок",
+        "canonical": "#1B1D21",
+        "tonalRamp": [
+          "#090B0F",
+          "#232529",
+          "#404247",
+          "#5F6166",
+          "#808287",
+          "#A2A5AA",
+          "#C6C9CF",
+          "#ECEEF4"
+        ]
+      },
+      "hinge": {
+        "role": "neutral",
+        "displayName": "Шарнир",
+        "canonical": "#08090A",
+        "tonalRamp": [
+          "#0A0B0C",
+          "#242526",
+          "#414243",
+          "#606163",
+          "#818284",
+          "#A3A5A7",
+          "#C8C9CB",
+          "#EDEFF0"
+        ]
+      },
+      "pin": {
+        "role": "neutral",
+        "displayName": "Штифт",
+        "canonical": "#9AA0A6",
+        "tonalRamp": [
+          "#080C10",
+          "#21262A",
+          "#3D4348",
+          "#5C6267",
+          "#7D8389",
+          "#A0A6AC",
+          "#C4CAD0",
+          "#E9EFF6"
+        ]
+      },
+      "red": {
+        "role": "primary",
+        "displayName": "Сигнальная лампа",
+        "canonical": "#E5322D",
+        "tonalRamp": [
+          "#310000",
+          "#5D0000",
+          "#8B0000",
+          "#BC0001",
+          "#E7342F",
+          "#FF6256",
+          "#FF9484",
+          "#FFC3B2"
+        ]
+      },
+      "red-ink": {
+        "role": "primary",
+        "displayName": "Красные чернила",
+        "canonical": "#C9261F",
+        "tonalRamp": [
+          "#320000",
+          "#5D0000",
+          "#8B0000",
+          "#B8070A",
+          "#E14035",
+          "#FF6F5F",
+          "#FF9D8C",
+          "#FFCABA"
+        ]
+      },
+      "ink-hover": {
+        "role": "neutral",
+        "displayName": "Графит, наведение",
+        "canonical": "#2B2F34",
+        "tonalRamp": [
+          "#080B10",
+          "#22252A",
+          "#3E4248",
+          "#5D6267",
+          "#7E8389",
+          "#A1A5AC",
+          "#C4CAD0",
+          "#EAEFF6"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "flap": {
+        "displayName": "Флажок",
+        "purpose": "Цифры и знаки на табло; размер = 0.72 × высота флажка."
+      },
+      "brand": {
+        "displayName": "Знак",
+        "purpose": "Словесный знак «В уме»."
+      },
+      "answer": {
+        "displayName": "Ответ",
+        "purpose": "Большое поле ответа в Потоке."
+      },
+      "say": {
+        "displayName": "Мысль кадра",
+        "purpose": "Одна фраза под табло, max 36ch."
+      },
+      "title": {
+        "displayName": "Заголовок",
+        "purpose": "Заголовок экрана в полосе; значения журнала."
+      },
+      "body": {
+        "displayName": "Текст",
+        "purpose": "Основной текст, табличные цифры."
+      },
+      "meta": {
+        "displayName": "Мета",
+        "purpose": "Счётчики, подсказки управления, подписи панелей."
+      },
+      "label": {
+        "displayName": "Метка",
+        "purpose": "Печатные метки статуса, капслок."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "flap-fall",
+        "value": "rotateX(0 → -90deg) 90ms ease-in",
+        "purpose": "Верхний старый флажок падает."
+      },
+      {
+        "name": "flap-land",
+        "value": "rotateX(90deg → -7deg @78% → 0) 90ms ease-out, delay 90ms",
+        "purpose": "Нижний новый флажок ложится с отскоком; итого 180ms."
+      },
+      {
+        "name": "flap-stagger",
+        "value": "28ms",
+        "purpose": "Сдвиг между изменившимися флажками."
+      },
+      {
+        "name": "lit-move",
+        "value": "left/top/width/height 180ms",
+        "purpose": "Переезд красной рамки."
+      },
+      {
+        "name": "time-drain",
+        "value": "scaleX(1 → 0) linear, duration = время показа",
+        "purpose": "Полоса времени в Потоке."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "instant swap",
+        "purpose": "Символ меняется сразу, рамка и полоса без анимации."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "side-collapse",
+        "value": "1080px"
+      },
+      {
+        "name": "mobile",
+        "value": "640px"
+      },
+      {
+        "name": "touch",
+        "value": "(hover: none)"
+      },
+      {
+        "name": "board-two-rows",
+        "value": "tile < 72px with data-break"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Табло с лампой",
+      "kind": "custom",
+      "refersTo": "board",
+      "description": "Перекидное табло: цифры по разрядам, красная рамка с лампой на том, о чём речь сейчас.",
+      "html": "<div class=\"ds-board\"><span class=\"ds-tile\"><span class=\"ds-up\"><span class=\"ds-c-t\">8</span></span><span class=\"ds-dn\"><span class=\"ds-c-t\">8</span></span></span><span class=\"ds-tile\"><span class=\"ds-up\"><span class=\"ds-c-u\">7</span></span><span class=\"ds-dn\"><span class=\"ds-c-u\">7</span></span></span><span class=\"ds-tile\"><span class=\"ds-up\"><span class=\"ds-c-op\">+</span></span><span class=\"ds-dn\"><span class=\"ds-c-op\">+</span></span></span><span class=\"ds-tile\"><span class=\"ds-up\"><span class=\"ds-c-t\">9</span></span><span class=\"ds-dn\"><span class=\"ds-c-t\">9</span></span></span><span class=\"ds-tile\"><span class=\"ds-up\"><span class=\"ds-c-u\">8</span></span><span class=\"ds-dn\"><span class=\"ds-c-u\">8</span></span></span><span class=\"ds-lit\" style=\"left:168px;width:111px\"></span></div>",
+      "css": ":host{--page:#E3E5E2;--alu:#F2F3F1;--ink:#16181B;--ink-2:#4A4F55;--mute:#62676D;--line:#C8CBC7;--line-2:#DADDD9;--white:#FFFFFF;--h-on:#7FA2F5;--t-on:#41C48F;--u-on:#ECAE42;--i-on:#ECEEEB;--op-on:#A9AEB4;--housing:#D3D6D2;--housing-edge:#B5B9B4;--flap-up:#25282D;--flap-dn:#1B1D21;--hinge:#08090A;--pin:#9AA0A6;--red:#E5322D;--red-ink:#C9261F;font-family:'Golos Text',system-ui,sans-serif;font-variant-numeric:tabular-nums;} .ds-board{--th:72px;position:relative;display:inline-flex;gap:6px;padding:12px;background:var(--housing);border:1px solid var(--housing-edge);border-radius:5px}.ds-tile{position:relative;display:block;width:calc(var(--th)*.66);height:var(--th);font-size:calc(var(--th)*.72);font-weight:700;letter-spacing:-.02em;border-radius:4px;background:var(--flap-dn)}.ds-tile::after{content:'';position:absolute;left:0;right:0;top:calc(50% - 1px);height:2px;background:var(--hinge);z-index:4}.ds-tile::before{content:'';position:absolute;left:-2px;right:-2px;top:calc(50% - 4px);height:8px;z-index:5;background:linear-gradient(to right,var(--pin) 0 2px,transparent 2px calc(100% - 2px),var(--pin) calc(100% - 2px))}.ds-up,.ds-dn{position:absolute;left:0;right:0;height:50%;overflow:hidden}.ds-up{top:0;border-radius:4px 4px 0 0;background:var(--flap-up)}.ds-dn{bottom:0;border-radius:0 0 4px 4px;background:var(--flap-dn)}.ds-up>span,.ds-dn>span{display:block;height:var(--th);line-height:var(--th);text-align:center;color:var(--i-on)}.ds-dn>span{transform:translateY(-50%)}.ds-c-h{color:var(--h-on)!important}.ds-c-t{color:var(--t-on)!important}.ds-c-u{color:var(--u-on)!important}.ds-c-op{color:var(--op-on)!important;font-weight:500}.ds-lit{position:absolute;pointer-events:none;border:2px solid var(--red);border-radius:6px;z-index:6;top:7px;height:calc(var(--th) + 10px);transition:left .18s,width .18s}.ds-lit::before{content:'';position:absolute;top:-14px;left:50%;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:var(--red)}"
+    },
+    {
+      "name": "Кнопка",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Обычная кнопка: контур графитом, наведение белым.",
+      "html": "<button class=\"ds-btn\">Назад</button>",
+      "css": ":host{--page:#E3E5E2;--alu:#F2F3F1;--ink:#16181B;--ink-2:#4A4F55;--mute:#62676D;--line:#C8CBC7;--line-2:#DADDD9;--white:#FFFFFF;--h-on:#7FA2F5;--t-on:#41C48F;--u-on:#ECAE42;--i-on:#ECEEEB;--op-on:#A9AEB4;--housing:#D3D6D2;--housing-edge:#B5B9B4;--flap-up:#25282D;--flap-dn:#1B1D21;--hinge:#08090A;--pin:#9AA0A6;--red:#E5322D;--red-ink:#C9261F;font-family:'Golos Text',system-ui,sans-serif;font-variant-numeric:tabular-nums;} .ds-btn{border:1px solid var(--ink);background:transparent;color:var(--ink);padding:12px 20px;font:600 16px/1.45 'Golos Text',system-ui,sans-serif;border-radius:2px;min-height:48px;cursor:pointer;display:inline-flex;align-items:center;gap:10px}.ds-btn:hover{background:var(--white)}.ds-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}.ds-btn:disabled{border-color:var(--line);color:var(--mute);background:transparent;cursor:default}"
+    },
+    {
+      "name": "Главная кнопка",
+      "kind": "button",
+      "refersTo": "button-go",
+      "description": "Одна на экран, справа в строке управления; клавиша в kbd.",
+      "html": "<button class=\"ds-btn-go\">Дальше <kbd class=\"ds-kbd\">→</kbd></button>",
+      "css": ":host{--page:#E3E5E2;--alu:#F2F3F1;--ink:#16181B;--ink-2:#4A4F55;--mute:#62676D;--line:#C8CBC7;--line-2:#DADDD9;--white:#FFFFFF;--h-on:#7FA2F5;--t-on:#41C48F;--u-on:#ECAE42;--i-on:#ECEEEB;--op-on:#A9AEB4;--housing:#D3D6D2;--housing-edge:#B5B9B4;--flap-up:#25282D;--flap-dn:#1B1D21;--hinge:#08090A;--pin:#9AA0A6;--red:#E5322D;--red-ink:#C9261F;font-family:'Golos Text',system-ui,sans-serif;font-variant-numeric:tabular-nums;} .ds-btn-go{border:1px solid var(--ink);background:var(--ink);color:var(--alu);padding:12px 20px;font:600 16px/1.45 'Golos Text',system-ui,sans-serif;border-radius:2px;min-height:48px;cursor:pointer;display:inline-flex;align-items:center;gap:10px}.ds-btn-go:hover{background:#2B2F34}.ds-btn-go:focus-visible{outline:2px solid var(--ink);outline-offset:3px}.ds-kbd{font:inherit;font-size:12px;font-weight:600;border:1px solid currentColor;padding:0 5px;border-radius:2px;opacity:.8}"
+    },
+    {
+      "name": "Печатные метки",
+      "kind": "chip",
+      "refersTo": "stamp",
+      "description": "Статусы: контур, заливка, сейчас, доступно, зачёркнуто.",
+      "html": "<div class=\"ds-row\"><span class=\"ds-stamp\">мимо</span><span class=\"ds-stamp ds-fill\">взята</span><span class=\"ds-stamp ds-now\">сейчас</span><span class=\"ds-stamp ds-off\">открыть</span><span class=\"ds-stamp ds-gone\">сам</span></div>",
+      "css": ":host{--page:#E3E5E2;--alu:#F2F3F1;--ink:#16181B;--ink-2:#4A4F55;--mute:#62676D;--line:#C8CBC7;--line-2:#DADDD9;--white:#FFFFFF;--h-on:#7FA2F5;--t-on:#41C48F;--u-on:#ECAE42;--i-on:#ECEEEB;--op-on:#A9AEB4;--housing:#D3D6D2;--housing-edge:#B5B9B4;--flap-up:#25282D;--flap-dn:#1B1D21;--hinge:#08090A;--pin:#9AA0A6;--red:#E5322D;--red-ink:#C9261F;font-family:'Golos Text',system-ui,sans-serif;font-variant-numeric:tabular-nums;} .ds-row{display:flex;gap:6px;flex-wrap:wrap}.ds-stamp{display:inline-block;font:700 11px/1.3 'Golos Text',system-ui,sans-serif;letter-spacing:.07em;text-transform:uppercase;padding:3px 7px 2px;border:1px solid var(--ink);color:var(--ink);white-space:nowrap}.ds-fill{background:var(--ink);color:var(--alu)}.ds-now{background:var(--red-ink);border-color:var(--red-ink);color:#fff}.ds-off{border-color:var(--line);color:var(--mute)}.ds-gone{border-color:var(--line);color:var(--mute);text-decoration:line-through;text-decoration-thickness:1px}"
+    },
+    {
+      "name": "Строки-рейсы",
+      "kind": "nav",
+      "refersTo": "row-current",
+      "description": "Список шагов: пройдено графитом, сейчас на белом с красным номером, впереди приглушено.",
+      "html": "<ol class=\"ds-dep\"><li class=\"ds-past\"><span class=\"ds-no\">05</span><span>6 × двузначные · 3 с</span><svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\"><path d=\"M2 7.5l3 3 7-7\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg></li><li class=\"ds-cur\"><span class=\"ds-no\">06</span><span>6 × двузначные · 2 с</span><span class=\"ds-now\">сейчас</span></li><li class=\"ds-ahead\"><span class=\"ds-no\">07</span><span>8 × двузначные · 2 с</span><span></span></li></ol>",
+      "css": ":host{--page:#E3E5E2;--alu:#F2F3F1;--ink:#16181B;--ink-2:#4A4F55;--mute:#62676D;--line:#C8CBC7;--line-2:#DADDD9;--white:#FFFFFF;--h-on:#7FA2F5;--t-on:#41C48F;--u-on:#ECAE42;--i-on:#ECEEEB;--op-on:#A9AEB4;--housing:#D3D6D2;--housing-edge:#B5B9B4;--flap-up:#25282D;--flap-dn:#1B1D21;--hinge:#08090A;--pin:#9AA0A6;--red:#E5322D;--red-ink:#C9261F;font-family:'Golos Text',system-ui,sans-serif;font-variant-numeric:tabular-nums;} .ds-dep{list-style:none;margin:0;padding:0;background:var(--alu);width:380px;font:400 16px/1.45 'Golos Text',system-ui,sans-serif;color:var(--ink)}.ds-dep li{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line-2)}.ds-dep li:last-child{border-bottom:0}.ds-no{font-weight:700;color:var(--mute)}.ds-past .ds-no{color:var(--ink)}.ds-ahead span{color:var(--mute)}.ds-cur{background:var(--white)}.ds-cur .ds-no{color:var(--red-ink)}.ds-now{font:700 11px/1.3 'Golos Text',sans-serif;letter-spacing:.07em;text-transform:uppercase;padding:3px 7px 2px;background:var(--red-ink);color:#fff}"
+    },
+    {
+      "name": "Поле ответа",
+      "kind": "input",
+      "refersTo": "answer-input",
+      "description": "Большое поле Потока: пунктир в покое, красная обводка и сплошная рамка в фокусе.",
+      "html": "<input class=\"ds-ask\" inputmode=\"numeric\" maxlength=\"4\" value=\"177\" aria-label=\"Сколько сейчас?\">",
+      "css": ":host{--page:#E3E5E2;--alu:#F2F3F1;--ink:#16181B;--ink-2:#4A4F55;--mute:#62676D;--line:#C8CBC7;--line-2:#DADDD9;--white:#FFFFFF;--h-on:#7FA2F5;--t-on:#41C48F;--u-on:#ECAE42;--i-on:#ECEEEB;--op-on:#A9AEB4;--housing:#D3D6D2;--housing-edge:#B5B9B4;--flap-up:#25282D;--flap-dn:#1B1D21;--hinge:#08090A;--pin:#9AA0A6;--red:#E5322D;--red-ink:#C9261F;font-family:'Golos Text',system-ui,sans-serif;font-variant-numeric:tabular-nums;} .ds-ask{width:140px;height:64px;font:700 40px 'Golos Text',system-ui,sans-serif;text-align:center;border:1px dashed var(--ink-2);background:var(--white);color:var(--ink);border-radius:3px;caret-color:var(--red)}.ds-ask:focus{outline:2px solid var(--red);outline-offset:3px;border-style:solid}"
+    },
+    {
+      "name": "Подсказка-ступень",
+      "kind": "card",
+      "refersTo": "button",
+      "description": "Строка-кнопка подсказки с меткой и пояснением.",
+      "html": "<button class=\"ds-help\"><strong>Первый шаг</strong><span class=\"ds-off\">открыть</span><small>Покажу, с чего начать. Зачёта не будет, похожий пример придёт позже.</small></button>",
+      "css": ":host{--page:#E3E5E2;--alu:#F2F3F1;--ink:#16181B;--ink-2:#4A4F55;--mute:#62676D;--line:#C8CBC7;--line-2:#DADDD9;--white:#FFFFFF;--h-on:#7FA2F5;--t-on:#41C48F;--u-on:#ECAE42;--i-on:#ECEEEB;--op-on:#A9AEB4;--housing:#D3D6D2;--housing-edge:#B5B9B4;--flap-up:#25282D;--flap-dn:#1B1D21;--hinge:#08090A;--pin:#9AA0A6;--red:#E5322D;--red-ink:#C9261F;font-family:'Golos Text',system-ui,sans-serif;font-variant-numeric:tabular-nums;} .ds-help{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;width:380px;text-align:left;background:var(--alu);border:0;border-bottom:1px solid var(--line-2);padding:14px 20px;font:400 16px/1.45 'Golos Text',system-ui,sans-serif;color:var(--ink);cursor:pointer}.ds-help:hover{background:var(--white)}.ds-help:focus-visible{outline:2px solid var(--ink);outline-offset:3px}.ds-help strong{font-weight:700}.ds-help small{grid-column:1/-1;color:var(--ink-2);font-size:14px}.ds-off{font:700 11px/1.3 'Golos Text',sans-serif;letter-spacing:.07em;text-transform:uppercase;padding:3px 7px 2px;border:1px solid var(--line);color:var(--mute);align-self:start}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Вокзальное табло",
+    "overview": "Число не появляется, а перещёлкивается. Каждое выражение стоит на тёмных перекидных флажках в светлом алюминиевом корпусе, приём виден как перекидка (98 → 100 − 2), а шаги идут строками, как рейсы в расписании. Табло в жизни тёмные; здесь тёмное только само табло, а всё вокруг светлое, сухое и линованное, как вокзальный щит в дневном зале.\n\nПлотность спокойная: одна сцена с крупным табло и одной мыслью, справа узкая служебная панель. Сетку держат волосяные линии 1px, а не карточки и тени. Красный цвет здесь работает как сигнальная лампа: он горит только у того, о чём речь сейчас. Тон уважительный и к 9-летнему, и к 15-летнему: без маскотов, конфетти, сюжета и детсадовских скруглений. Отвергнутый образ: «как у всех обучалок» (скруглённые карточки, фирменный фиолетовый, большая весёлая кнопка).",
+    "keyCharacteristics": [
+      "Тёмные перекидные флажки в алюминиевом корпусе на бледно-сером листе.",
+      "Один красный акцент, только для «сейчас».",
+      "Цветовой код разрядов (сотни/десятки/единицы) везде, где есть число.",
+      "Статусы набраны печатными метками капслоком, без скруглений.",
+      "Плоско: линии 1px вместо теней, градиентов и карточек.",
+      "Одно семейство шрифта (Golos Text), табличные цифры."
+    ],
+    "rules": [
+      {
+        "name": "The Lamp Rule",
+        "body": "Красный значит «вот о чём речь сейчас», и больше ничего. На экране горит не больше одного «сейчас» на каждый уровень (одна рамка на табло, одна строка «сейчас» в списке). Ошибки красным не красятся: «мимо» — это контурная метка графитом.",
+        "section": "colors"
+      },
+      {
+        "name": "The Place-Value Rule",
+        "body": "Сотни синие, десятки зелёные, единицы янтарные, во всём приложении без исключений. Цвет разряда никогда не используется для статуса или украшения.",
+        "section": "colors"
+      },
+      {
+        "name": "The Amber Text Rule",
+        "body": "Янтарный `u` на светлом фоне текстом не ставить (низкий контраст), для текста брать `u-text`.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Только Golos Text. Моноширинных, декоративных и вторых гарнитур нет; клавиши `kbd` набраны тем же шрифтом (600, 12px, тонкая рамка цвета текста).",
+        "section": "typography"
+      },
+      {
+        "name": "The Two-Digit Pad Rule",
+        "body": "Порядковые номера строк дополняются нулём до двух цифр (01, 02 … 11), как номера рейсов.",
+        "section": "typography"
+      },
+      {
+        "name": "The Hairline Rule",
+        "body": "Структура держится на линиях 1px (`line` для швов секций, `line-2` для строк), а не на тенях, плашках и отступах-карточках.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Hardware Exception",
+        "body": "Двухцветная заливка `linear-gradient` с жёсткими стопами рисует штифты флажка; это деталь табло, а не декоративный градиент. Плавные градиенты на поверхностях интерфейса не используются.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do держать на экране одну мысль: одно табло, одну фразу, одну главную кнопку.",
+      "Do красить каждую цифру по разряду (`h`/`t`/`u` на светлом, `*-on` на флажке), включая цифры на малых табло в журнале.",
+      "Do перекидывать только изменившиеся флажки: 90ms + 90ms с отскоком −7°, сдвиг 28ms; при reduced motion менять символ мгновенно.",
+      "Do оставлять ошибку видимой: зачёркнутое малое табло и рядом пояснение, что именно не сошлось.",
+      "Do писать спокойно и по делу, на «ты»: «Не сходится. Проверь второй шаг», «Зачёт. Приём сработал», «Сбились единицы».",
+      "Do давать статус печатной меткой из короткого слова в нижнем регистре в исходнике (капслок делает CSS).",
+      "Do заменять клавиатурные подсказки текстом для касания при `hover: none`."
+    ],
+    "donts": [
+      "Don't использовать красный для ошибок, предупреждений, украшения или второго акцента; «мимо» — контурная метка `ink`.",
+      "Don't использовать цвета разрядов для чего-либо кроме разрядов.",
+      "Don't ставить янтарный `u` текстом на светлом; только `u-text`.",
+      "Don't вводить скруглённые карточки, тени, плавные градиенты и плашки-подложки; структура — линии 1px.",
+      "Don't скруглять метки, строки и панели; радиус есть только у деталей табло и (2–3px) у кнопок и полей.",
+      "Don't брать второй шрифт, моноширинный шрифт или иконки-глифы; галочка — инлайн SVG.",
+      "Don't менять число флажков посреди кадра: табло не должно прыгать.",
+      "Don't показывать маскотов, конфетти, звёздочки-награды, восклицательную похвалу и уменьшительную лексику («молодчинка», «циферки»).",
+      "Don't обещать «развитие памяти»; говорить «складываешь длинные цепочки»."
+    ]
+  }
+}
